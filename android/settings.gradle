@@ -1,0 +1,3 @@
+rootProject.name = 'umCodingChallenge'
+
+include ':app'
