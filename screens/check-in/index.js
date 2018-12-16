@@ -10,22 +10,31 @@ import {
     TextInput,
     ActivityIndicator,
 } from 'react-native';
+import { connect } from 'react-redux';
+import saveEntries from '../../actions/save-entries';
 import {
     deviceWidth,
 } from '../../styles/dimensions';
 import {
     FeelingListItem,
 } from '../../components';
+import {
+    saveEntry,
+    fetchEntries,
+} from '../../api';
 import styles from './style';
 
 type Props = {
     navigation: Object,
+    saveEntries: ( Array<[string, mixed]> ) => void,
 }
 
 type State = {
     screenAnimated: Object,
     isLoading: boolean,
 }
+
+const months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
 
 class CheckIn extends PureComponent<Props, State> {
     state: State;
@@ -34,6 +43,7 @@ class CheckIn extends PureComponent<Props, State> {
     feelings: Array<string>;
     selectedFeelings: Array<string>;
     inputRef: Object;
+    comment: string;
 
     static navigationOptions = {
         header: null,
@@ -45,6 +55,7 @@ class CheckIn extends PureComponent<Props, State> {
         this.mood = 4;
         this.feelings = [ 'Happy', 'Optimistic', 'Bored', 'Depressed' ];
         this.selectedFeelings = [];
+        this.comment = '';
 
         this.state = {
             screenAnimated: new Animated.Value( 0 ),
@@ -266,7 +277,31 @@ class CheckIn extends PureComponent<Props, State> {
         this.inputRef.blur();
         this.setState( {
             isLoading: true,
+        }, () => {
+            const date = new Date();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const month = months[ date.getMonth() ];
+            const day = `${date.getDate()}`;
+            const timestamp = date.toUTCString();
+
+            saveEntry( timestamp, day, month, `${hours}:${minutes}`,
+                this.mood, this.selectedFeelings.join( '|' ), this.comment )
+                .then( () => {
+                    fetchEntries()
+                        .then( data => {
+                            this.props.saveEntries( data );
+                            this.props.navigation.navigate( 'home' );
+                        } );
+                } )
+                .catch( () => {
+                    this.props.navigation.navigate( 'home' );
+                } );
         } );
+    }
+
+    onCommentTextChanged = ( text: string ) => {
+        this.comment = text;
     }
 
     renderCommentsSection = () => {
@@ -283,7 +318,7 @@ class CheckIn extends PureComponent<Props, State> {
                     underlineColorAndroid={ 'transparent' }
                     multiline
                     autoCapitalize={ 'sentences' }
-                    onChangeText={ () => {} }
+                    onChangeText={ this.onCommentTextChanged }
                     style={ styles.input }
                     placeholder={ 'Tell us more (optional)' }
                     ref={ ( ref ) => {
@@ -353,4 +388,6 @@ class CheckIn extends PureComponent<Props, State> {
     }
 }
 
-export default CheckIn;
+export default connect( null, {
+    saveEntries,
+} )( CheckIn );
