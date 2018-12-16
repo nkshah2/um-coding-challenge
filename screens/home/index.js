@@ -16,6 +16,7 @@ type Props = {
     entries: Object,
     averageMood: number,
     totalEntries: number,
+    navigation: Object,
 }
 
 type State = {
@@ -30,7 +31,7 @@ class Home extends PureComponent<Props, State> {
     }
 
     onCheckInPressed = () => {
-        // TODO: navigate to next screen here
+        this.props.navigation.navigate( 'add' );
     }
 
     renderAverageArt = () => {

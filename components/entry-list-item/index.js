@@ -31,7 +31,7 @@ const { UIManager } = NativeModules;
 
 const CUSTOM_LAYOUT_ANIMATION = {
     create: {
-        duration: 300,
+        duration: 100,
         property: LayoutAnimation.Properties.opacity,
         type: LayoutAnimation.Types.easeInEaseOut,
     },
