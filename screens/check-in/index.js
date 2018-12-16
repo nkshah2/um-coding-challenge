@@ -9,6 +9,7 @@ import {
     FlatList,
     TextInput,
     ActivityIndicator,
+    Image,
 } from 'react-native';
 import { connect } from 'react-redux';
 import saveEntries from '../../actions/save-entries';
@@ -22,6 +23,11 @@ import {
     saveEntry,
     fetchEntries,
 } from '../../api';
+import {
+    UnhappyFace,
+    HappyFace,
+    MehFace,
+} from '../../images';
 import styles from './style';
 
 type Props = {
@@ -32,6 +38,7 @@ type Props = {
 type State = {
     screenAnimated: Object,
     isLoading: boolean,
+    mood: number,
 }
 
 const months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
@@ -39,7 +46,6 @@ const months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 
 class CheckIn extends PureComponent<Props, State> {
     state: State;
     props: Props;
-    mood: number;
     feelings: Array<string>;
     selectedFeelings: Array<string>;
     inputRef: Object;
@@ -52,7 +58,6 @@ class CheckIn extends PureComponent<Props, State> {
     constructor() {
         super();
 
-        this.mood = 4;
         this.feelings = [ 'Happy', 'Optimistic', 'Bored', 'Depressed' ];
         this.selectedFeelings = [];
         this.comment = '';
@@ -60,6 +65,7 @@ class CheckIn extends PureComponent<Props, State> {
         this.state = {
             screenAnimated: new Animated.Value( 0 ),
             isLoading: false,
+            mood: 4,
         }
     }
 
@@ -76,7 +82,19 @@ class CheckIn extends PureComponent<Props, State> {
     }
 
     onSliderValueChanged = ( value: number ) => {
-        this.mood = value;
+        this.setState( {
+            mood: value,
+        } )
+    }
+
+    getFace = () => {
+        if ( this.state.mood === 4 ) {
+            return MehFace;
+        } else if ( this.state.mood < 4 ) {
+            return UnhappyFace;
+        } else {
+            return HappyFace;
+        }
     }
 
     renderMoodSelector = () => {
@@ -104,6 +122,11 @@ class CheckIn extends PureComponent<Props, State> {
                     <View
                         style={ styles.moodContainer }
                     >
+                        <Image
+                            style={ styles.face }
+                            resizeMode={ 'stretch' }
+                            source={ this.getFace() }
+                        />
                     </View>
 
                     <Slider
@@ -294,7 +317,7 @@ class CheckIn extends PureComponent<Props, State> {
             }
 
             saveEntry( timestamp, day, month, `${hours}:${minutes}`,
-                this.mood, this.selectedFeelings.join( '|' ), this.comment )
+                this.state.mood, this.selectedFeelings.join( '|' ), this.comment )
                 .then( () => {
                     fetchEntries()
                         .then( data => {

@@ -35,8 +35,13 @@ const style = EStyleSheet.create( {
     moodContainer: {
         height: '$deviceHeight * 0.08',
         width: '$deviceHeight * 0.08',
-        backgroundColor: 'pink',
         marginRight: 24,
+    },
+
+    face: {
+        height: '$deviceHeight * 0.08',
+        width: '$deviceHeight * 0.08', 
+        tintColor: '$background.color4',
     },
 
     image: {

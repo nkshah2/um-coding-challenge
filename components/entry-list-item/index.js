@@ -7,9 +7,13 @@ import {
     NativeModules,
     Animated,
     FlatList,
+    Image,
 } from 'react-native';
 import {
     DownArrow,
+    UnhappyFace,
+    HappyFace,
+    MehFace,
 } from '../../images';
 import styles from './style';
 
@@ -113,6 +117,16 @@ class EntryItem extends PureComponent<Props, State> {
         );
     }
 
+    getFace = () => {
+        if ( this.props.mood === 4 ) {
+            return MehFace;
+        } else if ( this.props.mood < 4 ) {
+            return UnhappyFace;
+        } else {
+            return HappyFace;
+        }
+    }
+
     render() {
         const {
             day,
@@ -161,6 +175,11 @@ class EntryItem extends PureComponent<Props, State> {
                         <View
                             style={ styles.moodContainer }
                         >
+                            <Image
+                                style={ styles.face }
+                                resizeMode={ 'stretch' }
+                                source={ this.getFace() }
+                            />
                         </View>
                         <Animated.Image
                             resizeMode={ 'stretch' }

@@ -44,17 +44,18 @@ class Home extends PureComponent<Props, State> {
         const ART_DIMEN = deviceWidth * 0.6;
 
         const data = [
-            {
-                title: 'positive',
-                mood: averageMood,
-                color: '#00C5BE',
-            },
 
             {
                 title: 'negative',
                 mood: 7 - averageMood,
                 color: '#757575',
-            }
+            },
+
+            {
+                title: 'positive',
+                mood: averageMood,
+                color: '#00C5BE',
+            },
         ];
 
         const sectionAngles = d3.pie().value( d => d.mood )( data )

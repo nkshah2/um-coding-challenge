@@ -39,7 +39,14 @@ const style = EStyleSheet.create( {
     moodContainer: {
         height: '$deviceWidth * 0.7',
         width: '$deviceWidth * 0.7',
-        backgroundColor: 'yellow',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    face: {
+        height: '$deviceWidth * 0.7',
+        width: '$deviceWidth * 0.7',
+        tintColor: '$background.color4',
     },
 
     slider: {

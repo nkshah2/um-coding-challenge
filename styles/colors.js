@@ -4,6 +4,7 @@ const colors = {
     black: '#000',
     white: '#fff',
     teal: '#00C5BE',
+    gray: '#757575',
 }
 
 export const text = {
@@ -16,6 +17,7 @@ export const background = {
     color1: colors.subtleGray,
     color2: colors.teal,
     color3: colors.white,
+    color4: colors.gray,
 }
 
 export const border = {
