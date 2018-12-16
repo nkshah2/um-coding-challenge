@@ -5,11 +5,16 @@ import {
     Text,
     FlatList,
     TouchableOpacity,
+    ART,
 } from 'react-native';
 import { connect } from 'react-redux';
+import * as d3 from 'd3'
 import {
     EntryListItem,
 } from '../../components';
+import {
+    deviceWidth,
+} from '../../styles/dimensions';
 import styles from './style';
 
 type Props = {
@@ -35,7 +40,62 @@ class Home extends PureComponent<Props, State> {
     }
 
     renderAverageArt = () => {
-        return <View style={ styles.chartContainer } />
+        const averageMood = Math.round( 7 * this.props.averageMood );
+        const ART_DIMEN = deviceWidth * 0.6;
+
+        const data = [
+            {
+                title: 'positive',
+                mood: averageMood,
+                color: '#00C5BE',
+            },
+
+            {
+                title: 'negative',
+                mood: 7 - averageMood,
+                color: '#757575',
+            }
+        ];
+
+        const sectionAngles = d3.pie().value( d => d.mood )( data )
+
+        const path = d3.arc()
+            .outerRadius( ( ART_DIMEN / 2 ) - 20 )
+            .padAngle( .1 )
+            .innerRadius( ( ART_DIMEN / 2 ) - 50 )
+        return (
+            <View
+                style={ styles.chartContainer }
+            >
+                <ART.Surface width={ ART_DIMEN } height={ ART_DIMEN }>
+                    <ART.Group x={ ART_DIMEN/2 } y={ ART_DIMEN/2 } >
+                        {
+                            sectionAngles.map( section => {
+                                return (
+                                    <ART.Shape
+                                        key={ section.index }
+                                        d={ path( section ) }
+                                        stroke={ section.data.color }
+                                        fill={ section.data.color }
+                                        strokeWidth={ 1 }
+                                        />
+                                )
+                            } )
+                        } 
+                    </ART.Group>
+                </ART.Surface>
+                <View
+                    style={ [ styles.smileyContainer, {
+                        width: ( ART_DIMEN / 2 ) - 25,
+                        height: ( ART_DIMEN / 2 ) - 25,
+                    } ] }
+                >
+                    {
+                        // this is where smiley goes
+                    }
+                </View>
+            </View>
+        );
     }
 
     renderListItem = ( { item } ) => {

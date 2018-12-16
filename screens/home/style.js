@@ -26,9 +26,10 @@ const style = EStyleSheet.create( {
     },
 
     chartContainer: {
-        height: '$deviceHeight * 0.28',
-        width: '$deviceHeight * 0.28',
-        backgroundColor: 'yellow',
+        height: '$deviceWidth * 0.6',
+        width: '$deviceWidth * 0.6',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     textContainer: {
@@ -70,6 +71,11 @@ const style = EStyleSheet.create( {
         alignSelf: 'flex-end',
         marginRight: 8,
         marginTop: 8,
+    },
+
+    smileyContainer: {
+        alignSelf: 'center',
+        position: 'absolute',
     },
 
 } );

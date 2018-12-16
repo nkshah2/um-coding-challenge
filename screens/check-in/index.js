@@ -279,11 +279,19 @@ class CheckIn extends PureComponent<Props, State> {
             isLoading: true,
         }, () => {
             const date = new Date();
-            const hours = date.getHours();
-            const minutes = date.getMinutes();
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
             const month = months[ date.getMonth() ];
             const day = `${date.getDate()}`;
             const timestamp = date.toUTCString();
+
+            if ( `${hours}`.length < 2 ) {
+                hours = `0${hours}`;
+            }
+
+            if ( `${minutes}`.length < 2 ) {
+                minutes = `0${minutes}`;
+            }
 
             saveEntry( timestamp, day, month, `${hours}:${minutes}`,
                 this.mood, this.selectedFeelings.join( '|' ), this.comment )
