@@ -17,6 +17,7 @@ type State = {
 
 type Props = {
     saveEntries: ( Array<[string, mixed]> ) => void,
+    navigation: Object,
 }
 
 class SplashScreen extends PureComponent<Props, State> {
@@ -31,7 +32,7 @@ class SplashScreen extends PureComponent<Props, State> {
         fetchEntries()
             .then( data => {
                 this.props.saveEntries( data );
-                // TODO: navigate to home
+                this.props.navigation.navigate( 'home' );
             } );
     }
 

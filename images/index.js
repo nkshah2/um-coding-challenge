@@ -1,0 +1,1 @@
+export { default as DownArrow } from './ic-down-arrow.png';
