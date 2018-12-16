@@ -5,6 +5,8 @@ const style = EStyleSheet.create( {
 
     screenRoot: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 
     root: {
@@ -71,6 +73,21 @@ const style = EStyleSheet.create( {
         padding: 16,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    commentContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '$background.color1',
+    },
+
+    input: {
+        width: '$deviceWidth * 0.85',
+        height: '$deviceHeight * 0.3',
+        padding: 8,
+        textAlignVertical: 'top',
+        backgroundColor: '$background.color3',
+        borderRadius: 4,
     },
 } );
 

@@ -7,6 +7,8 @@ import {
     Slider,
     TouchableOpacity,
     FlatList,
+    TextInput,
+    ActivityIndicator,
 } from 'react-native';
 import {
     deviceWidth,
@@ -22,6 +24,7 @@ type Props = {
 
 type State = {
     screenAnimated: Object,
+    isLoading: boolean,
 }
 
 class CheckIn extends PureComponent<Props, State> {
@@ -30,6 +33,7 @@ class CheckIn extends PureComponent<Props, State> {
     mood: number;
     feelings: Array<string>;
     selectedFeelings: Array<string>;
+    inputRef: Object;
 
     static navigationOptions = {
         header: null,
@@ -44,6 +48,7 @@ class CheckIn extends PureComponent<Props, State> {
 
         this.state = {
             screenAnimated: new Animated.Value( 0 ),
+            isLoading: false,
         }
     }
 
@@ -248,16 +253,80 @@ class CheckIn extends PureComponent<Props, State> {
         );
     }
 
+    goBackToFeelingSelector = () => {
+        Animated.timing( this.state.screenAnimated, {
+            toValue: 0.5,
+            duration: 300,
+            useNativeDrivers: true,
+        } ).start();
+        this.inputRef.blur();
+    }
+
+    submitData = () => {
+        this.inputRef.blur();
+        this.setState( {
+            isLoading: true,
+        } );
+    }
+
     renderCommentsSection = () => {
         return (
             <Animated.View
-                style={ [ styles.root, {
+                style={ [ styles.root, styles.commentContainer, {
                     left: this.state.screenAnimated.interpolate( {
                         inputRange: [ 0.5, 1 ],
                         outputRange: [ deviceWidth, 0 ]
                     } ),
                 } ] }
             >
+                <TextInput
+                    underlineColorAndroid={ 'transparent' }
+                    multiline
+                    autoCapitalize={ 'sentences' }
+                    onChangeText={ () => {} }
+                    style={ styles.input }
+                    placeholder={ 'Tell us more (optional)' }
+                    ref={ ( ref ) => {
+                        if ( ref ) {
+                            this.inputRef = ref;
+                        }
+                    } }
+                />
+                
+                <View
+                        style={ [ styles.ctaContainer, {
+                            marginBottom: 32,
+                        } ] }
+                    >
+                        <TouchableOpacity
+                            onPress={ this.goBackToFeelingSelector }
+                        >
+                            <View
+                                style={ styles.cta }
+                            >
+                                <Text
+                                    style={ styles.ctaText }
+                                >
+                                    Previous
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={ this.submitData }
+                        >
+                            <View
+                                style={ styles.cta }
+                            >
+                                <Text
+                                    style={ styles.ctaText }
+                                >
+                                    Finish
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                
             </Animated.View>
         );
     }
@@ -267,9 +336,18 @@ class CheckIn extends PureComponent<Props, State> {
             <View
                 style={ styles.screenRoot }
             >
-                { this.renderMoodSelector() }
-                { this.renderFeelingSelector() }
-                { this.renderCommentsSection() }
+                { !this.state.isLoading && this.renderMoodSelector() }
+                { !this.state.isLoading && this.renderFeelingSelector() }
+                { !this.state.isLoading && this.renderCommentsSection() }
+                {
+                    this.state.isLoading ?
+                    <ActivityIndicator
+                        size={ 'large' }
+                        color={ '#00C5BE' }
+                    />
+                    :
+                    null
+                }
             </View>
         );
     }
